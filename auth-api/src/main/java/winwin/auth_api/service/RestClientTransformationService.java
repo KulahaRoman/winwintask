@@ -9,7 +9,7 @@ import winwin.auth_api.dto.ProcessResponseDTO;
 import java.util.Objects;
 
 @Service
-@Profile({"dev", "prod"})
+@Profile("!test")
 public class RestClientTransformationService implements TransformationService {
     private final RestClient restClient;
 
