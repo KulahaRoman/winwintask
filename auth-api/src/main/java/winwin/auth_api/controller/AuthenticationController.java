@@ -1,5 +1,6 @@
 package winwin.auth_api.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +21,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentials) {
+    public ResponseEntity<TokenDTO> login(@Valid @RequestBody CredentialsDTO credentials) {
         return new ResponseEntity<>(authenticationService.login(credentials), HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody CredentialsDTO credentials) {
+    public ResponseEntity<Void> register(@Valid @RequestBody CredentialsDTO credentials) {
         authenticationService.register(credentials);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

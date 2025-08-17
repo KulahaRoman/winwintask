@@ -1,5 +1,6 @@
 package winwin.auth_api.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class ProcessorController {
     }
 
     @PostMapping("/process")
-    public ProcessResponseDTO process(@RequestBody ProcessRequestDTO processRequestDTO) {
+    public ProcessResponseDTO process(@Valid @RequestBody ProcessRequestDTO processRequestDTO) {
         return processorService.process(processRequestDTO);
     }
 }

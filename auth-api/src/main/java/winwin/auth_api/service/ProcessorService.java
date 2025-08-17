@@ -3,7 +3,6 @@ package winwin.auth_api.service;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 import winwin.auth_api.dto.ProcessRequestDTO;
 import winwin.auth_api.dto.ProcessResponseDTO;
 import winwin.auth_api.entity.Log;
@@ -16,12 +15,12 @@ import java.util.UUID;
 @Service
 @Transactional
 public class ProcessorService {
+    private final TransformationService transformationService;
     private final LogRepository logRepository;
-    private final RestClient restClient;
 
-    public ProcessorService(LogRepository logRepository, RestClient restClient) {
+    public ProcessorService(TransformationService transformationService, LogRepository logRepository) {
         this.logRepository = logRepository;
-        this.restClient = restClient;
+        this.transformationService = transformationService;
     }
 
     public ProcessResponseDTO process(ProcessRequestDTO processRequestDTO) {
@@ -31,11 +30,7 @@ public class ProcessorService {
             throw new RuntimeException("invalid authentication token");
         }
 
-        var responseDTO = Objects.requireNonNull(restClient
-                .post()
-                .body(processRequestDTO)
-                .retrieve()
-                .body(ProcessRequestDTO.class));
+        var responseDTO = transformationService.transformDTO(processRequestDTO);
 
         var log = new Log();
         log.setUserID(UUID.fromString((String) authentication.getPrincipal()));
@@ -44,7 +39,7 @@ public class ProcessorService {
         log.setCreatedAt(System.currentTimeMillis());
 
         logRepository.save(log);
-        
-        return new ProcessResponseDTO(responseDTO.getText());
+
+        return responseDTO;
     }
 }

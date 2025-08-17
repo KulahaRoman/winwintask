@@ -8,13 +8,15 @@ spring:
     hibernate:
       ddl-auto: create # for testing purposes, should be removed!
   security:
-    token:
-      jwt:
-        secret: ${JWT_SECRET}
-        expiration: 360000
-      service:
-        secret: ${INTERNAL_TOKEN}
+    jwt:
+      secret: ${JWT_SECRET}
+      expiration: 360000
   datasource:
     url: jdbc:postgresql://${POSTGRES_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+
+client:
+  service:
+    url: http://data-api:8081/api/transform
+    secret: ${INTERNAL_TOKEN}

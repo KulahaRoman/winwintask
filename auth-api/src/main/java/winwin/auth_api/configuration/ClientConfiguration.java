@@ -7,13 +7,16 @@ import org.springframework.web.client.RestClient;
 
 @Configuration
 public class ClientConfiguration {
-    @Value("${spring.security.token.service.secret}")
+    @Value("${client.service.url}")
+    private String serviceURL;
+
+    @Value("${client.service.secret}")
     private String serviceToken;
 
     @Bean
     public RestClient getRestClient() {
         return RestClient.builder()
-                .baseUrl("http://data-api:8081/api/transform")
+                .baseUrl(serviceURL)
                 .defaultHeader("X-Internal-Token", serviceToken)
                 .build();
     }
