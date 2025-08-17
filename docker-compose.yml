@@ -1,0 +1,28 @@
+services:
+  auth-api:
+    build: auth-api
+    command: [ java, -jar, app.jar ]
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_TOKEN=${INTERNAL_TOKEN}
+      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      auth-db:
+        condition: service_started
+  auth-db:
+    image: postgres:17.0
+    environment:
+      - POSTGRES_DB=users
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  data-api:
+    build: data-api
+    command: [ java, -jar, app.jar ]
+    environment:
+      - INTERNAL_TOKEN=${INTERNAL_TOKEN}
+    ports:
+      - "8081:8081"
